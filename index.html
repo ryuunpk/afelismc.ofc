@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AfelisMC - Servidor Minecraft Bedrock</title>
+    <meta name="description" content="AfelisMC - Servidor oficial parceiro Skye Brasil. Rivalize, conquiste e domine com tags exclusivas e kits poderosos.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cyan: #00d4ff;
+            --cyan-dark: #00a8cc;
+            --cyan-glow: rgba(0, 212, 255, 0.4);
+            --orange: #ff8c42;
+            --gold: #ffd700;
+            --orange-glow: rgba(255, 140, 66, 0.4);
+            --dark: #0a0a0f;
+            --darker: #050508;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--darker);
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Background with Banner */
+        .bg-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://i.postimg.cc/KvFrGXJj/4-Sem-Titulo-20251004093629.png') center/cover no-repeat;
+            opacity: 0.15;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, var(--darker) 100%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 1rem 5%;
+            background: rgba(10, 10, 15, 0.98);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--cyan), var(--orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--orange));
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .mobile-menu span {
+            width: 25px;
+            height: 2px;
+            background: #fff;
+            transition: all 0.3s ease;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--cyan), var(--cyan-dark));
+            color: #000;
+            box-shadow: 0 4px 20px var(--cyan-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--cyan-glow);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--orange);
+            background: rgba(255, 140, 66, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--orange), var(--gold));
+            color: #000;
+            box-shadow: 0 4px 20px var(--orange-glow);
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--orange-glow);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 5% 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-content {
+            animation: fadeInUp 1s ease;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--cyan);
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .badge::before {
+            content: '◆';
+            color: var(--cyan);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.8) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-visual {
+            position: relative;
+            animation: fadeIn 1.5s ease;
+            display: flex;
+            justify-content: center;
+        }
+
+        .server-logo {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 30px;
+            box-shadow: 
+                0 0 60px rgba(0, 212, 255, 0.3),
+                0 0 120px rgba(255, 140, 66, 0.2);
+            animation: float 6s ease-in-out infinite;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Sections General */
+        section {
+            padding: 6rem 5%;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-tag {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 140, 66, 0.1);
+            border: 1px solid rgba(255, 140, 66, 0.3);
+            border-radius: 50px;
+            color: var(--orange);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-content {
+                order: 2;
+            }
+
+            .hero-visual {
+                order: 1;
+            }
+
+            .hero-subtitle {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .server-logo {
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: flex;
+            }
+
+            .hero-ctas {
+                justify-content: center;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="bg-banner"></div>
+    <div class="bg-overlay"></div>
+    <div class="bg-grid"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <span>◆</span>
+                AfelisMC
+            </a>
+            <ul class="nav-links">
+                <li><a href="#comandos">Comandos</a></></li>
+                li>
+                <li><a href="#planos">Planos</a></li>
+                <li><a href="#tags">Tags</a></li>
+                <li><a href="#kits">Kits</a></li>
+                <li><a href="#parceiros">Parceiros</a></li>
+            </ul>
+            <div class="mobile-menu" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="badge">Parceiro Oficial Skye Brasil</div>
+                <h1>Leve uma IA inteligente e comandos intuitivos à sua comunidade Minecraft</h1>
+                <p class="hero-subtitle">
+                    AfelisMC está de volta! Servidor semi-anarquia para Minecraft Bedrock com 
+                    sistema de clans, economia balanceada e tags exclusivas. 
+                    Rivalize, conquiste e domine com preços acessíveis para todos.
+                </p>
+                <div class="hero-ctas">
+                    <a href="#" class="btn btn-primary">
+                        Entrar no Servidor
+                        <span>→</span>
+                    </a>
+                    <a href="#planos" class="btn btn-secondary">Ver Planos</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <img src="https://i.postimg.cc/3RvCRYsp/6-Sem-Titulo-20260216125450.png" alt="AfelisMC Logo" class="server-logo">
+            </div>
+        </div>
+    </section>
+        <!-- Commands Section -->
+    <section id="comandos">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-tag">Essentials</span>
+                <h2>Comandos Essenciais</h2>
+                <p class="section-subtitle">Sistema simplificado e eficiente para melhor performance</p>
+            </div>
+
+            <div class="commands-grid">
+                <div class="command-card fade-in">
+                    <div class="command-icon">!clan</div>
+                    <h3 class="command-name">Sistema de Clans</h3>
+                    <p class="command-desc">Crie, gerencie e guerreie com seu clan. Alianças, rivais e wars em tempo real.</p>
+                </div>
+                <div class="command-card fade-in">
+                    <div class="command-icon">!tpa</div>
+                    <h3 class="command-name">Teleporte</h3>
+                    <p class="command-desc">Solicite teleporte para amigos e aliados. Sistema de aceitação rápida.</p>
+                </div>
+                <div class="command-card fade-in">
+                    <div class="command-icon">!home</div>
+                    <h3 class="command-name">Homes</h3>
+                    <p class="command-desc">Defina e retorne para seus locais favoritos. Quantidade varia por plano.</p>
+                </div>
+                <div class="command-card fade-in">
+                    <div class="command-icon">!help</div>
+                    <h3 class="command-name">Ajuda</h3>
+                    <p class="command-desc">Lista todos os comandos disponíveis. Suporte integrado 24/7.</p>
+                </div>
+                <div class="command-card fade-in admin">
+                    <div class="command-icon">!adm</div>
+                    <h3 class="command-name">Painel Admin</h3>
+                    <p class="command-desc">Gerenciamento completo: ban, kick, mute, freeze. Moderação eficiente.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VIP Plans Section - PREÇOS ACESSÍVEIS -->
+    <section id="planos" class="plans">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-tag">Planos Acessíveis</span>
+                <h2>Escolha seu Nível</h2>
+                <p class="section-subtitle">Valores especiais de reabertura! Todos os planos abaixo de R$ 35</p>
+            </div>
+
+            <div class="plans-grid">
+                <!-- Plano Inicial -->
+                <div class="plan-card fade-in">
+                    <div class="plan-header">
+                        <div class="plan-name">
+                            <span class="plan-emoji">🌱</span>
+                            Iniciante
+                        </div>
+                        <div class="plan-price">R$ 4,99<span>/mês</span></div>
+                        <p class="plan-desc">Perfeito para começar</p>
+                    </div>
+                    <ul class="plan-features">
+                        <li>1 Home</li>
+                        <li>Tag básica no chat</li>
+                        <li>Kit Iniciante semanal</li>
+                        <li>Acesso aos comandos !tpa</li>
+                        <li>Prioridade baixa</li>
+                    </ul>
+                    <button class="btn btn-secondary" style="width: 100%;">Assinar">Assinar</button>
+                </div>
+
+                <!-- Plano Intermediário -->
+                <div class="plan-card fade-in">
+                    <div class="plan-header">
+                        <div class="plan-name">
+                            <span class="plan-emoji">⚔️</span>
+                            Guerreiro
+                        </div>
+                        <div class="plan-price">R$ 9,99<span>/mês</span></div>
+                        <p class="plan-desc">Para jogadores ativos</p>
+                    </div>
+                    <ul class="plan-features">
+                        <li>3 Homes</li>
+                        <li>Tag Guerreiro exclusiva</li>
+                        <li>Kit Guerreiro semanal</li>
+                        <li>Comandos !tpa e !home</li>
+                        <li>Prioridade média</li>
+                        <li>Cor no chat</li>
+                    </ul>
+                    <button class="btn btn-secondary" style="width: 100%;">Assinar</button>
+                </div>
+
+                <!-- Plano VIP -->
+                <div class="plan-card featured fade-in">
+                    <span class="plan-badge">MELHOR ESCOLHA</span>
+                    <div class="plan-header">
+                        <div class="plan-name">
+                            <span class="plan-emoji">👑</span>
+                            VIP
+                        </div>
+                        <div class="plan-price">R$ 14,99<span>/mês</span></div>
+                        <p class="plan-desc">Experiência completa</p>
+                    </div>
+                    <ul class="plan-features">
+                        <li>5 Homes</li>
+                        <li>Tag VIP exclusiva</li>
+                        <li>Kit VIP semanal</li>
+                        <li>Todos os comandos básicos</li>
+                        <li>Prioridade alta</li>
+                        <li>Cores personalizadas</li>
+                        <li>Acesso a eventos VIP</li>
+                    </ul>
+                    <button class="btn btn-primary" style="width: 100%;">Assinar VIP</button>
+                </div>
+
+                <!-- Plano MVP -->
+                <div class="plan-card fade-in">
+                    <div class="plan-header">
+                        <div class="plan-name">
+                            <span class="plan-emoji">💎</span>
+                            MVP
+                        </div>
+                        <div class="plan-price">R$ 24,99<span>/mês</span></div>
+                        <p class="plan-desc">Poder máximo</p>
+                    </div>
+                    <ul class="plan-features">
+                        <li>10 Homes</li>
+                        <li>Tag MVP exclusiva</li>
+                        <li>Kit MVP semanal + diário</li>
+                        <li>Todos os comandos</li>
+                        <li>Prioridade máxima</li>
+                        <li>Cores e formato personalizado</li>
+                        <li>Cargo exclusivo no Discord</li>
+                        <li>Beta tester de novidades</li>
+                    </ul>
+                    <button class="btn btn-gold" style="width: 100%;">Assinar MVP</button>
+                </div>
+
+                <!-- Plano Elite -->
+                <div class="plan-card fade-in">
+                    <div class="plan-header">
+                        <div class="plan-name">
+                            <span class="plan-emoji">🏆</span>
+                            Elite
+                        </div>
+                        <div class="plan-price">R$ 34,99<span>/mês</span></div>
+                        <p class="plan-desc">Status lendário</p>
+                    </div>
+                    <ul class="plan-features">
+                        <li>Homes ilimitadas</li>
+                        <li>Tag Elite exclusiva</li>
+                        <li>Kit Elite diário</li>
+                        <li>Todos os comandos + especiais</li>
+                        <li>Prioridade absoluta</li>
+                        <li>Tag personalizada</li>
+                        <li>Cargo de Elite no Discord</li>
+                        <li>Itens cosméticos exclusivos</li>
+                        <li>Suporte prioritário 24/7</li>
+                    </ul>
+                    <button class="btn btn-gold" style="width: 100%;">Assinar Elite</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        /* Commands Styles */
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .command-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .command-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyan), var(--orange));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .command-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 212, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .command-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .command-card.admin {
+            border-color: rgba(255, 140, 66, 0.3);
+            background: linear-gradient(135deg, rgba(255, 140, 66, 0.05), transparent);
+        }
+
+        .command-icon {
+            font-family, var(--cyan), var(--orange));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .command-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 212, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .command-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .command-card.admin {
+            border-color: rgba(255, 140, 66, 0.3);
+            background: linear-gradient(135deg, rgba(255, 140, 66, 0.05), transparent);
+        }
+
+        .command-icon {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--cyan);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .command-icon::before {
+            content: '>';
+            color: var(--orange);
+        }
+
+        .command-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .command-desc {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Plans Styles */
+        .plans {
+            background: linear-gradient(180deg, transparent, rgba(255, 140, 66, 0.03), transparent);
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .plan-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2rem;
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .plan-card.featured {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 140, 66, 0.1));
+            border-color: rgba(0, 212, 255, 0.5);
+            transform: scale(1.02);
+        }
+
+        .plan-card.featured:hover {
+            transform: scale(1.02) translateY(-10px);
+        }
+
+        .plan-badge {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, var(--cyan), var(--orange));
+            color: #000;
+            font-weight: 700;
+            font-size: 0.75rem;
+            border-radius: 50px;
+            text-transform: uppercase;
+        }
+
+        .plan-header {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .plan-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .plan-emoji {
+            font-size: 1.5rem;
+        }
+
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--cyan);
+            margin-bottom: 0.25rem;
+        }
+
+        .plan-price span {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 400;
+        }
+
+        .plan-desc {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .plan-features li {
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .plan-features li::before {
+            content: '✓';
+            color: var(--orange);
+            font-weight: 700;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 140, 66, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .plans-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+
+            .plan-card.featured {
+                transform: scale(1);
+                order: -1;
+            }
+        }
+    </style>
+        <!-- Tags Section - VALORES ACESSÍVEIS -->
+    <section id="tags">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-tag">Personalize-se</span>
+                <h2>Tags Exclusivas</h2>
+                <p class="section-subtitle">Expresse sua personalidade! Todas as tags abaixo de R$ 20</p>
+            </div>
+
+            <div class="tags-grid">
+                <!-- Tags Básicas -->
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in basic">
+                    <div class="tag-emoji">🥔</div>
+                    <span class="tag-name">Jegue</span>
+                    <span class="tag-price">R$ 1,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in basic">
+                    <div class="tag-emoji">💎</div>
+                    <span class="tag-name">Diamond</span>
+                    <span class="tag-price">R$ 2,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in basic">
+                    <div class="tag-emoji">💚</div>
+                    <span class="tag-name">Emerald</span>
+                    <span class="tag-price">R$ 2,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in basic">
+                    <div class="tag-emoji">👴</div>
+                    <span class="tag-name">Tiozão</span>
+                    <span class="tag-price">R$ 1,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in basic">
+                    <div class="tag-emoji">👶</div>
+                    <span class="tag-name">Tiozinho</span>
+                    <span class="tag-price">R$ 1,49</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in basic">
+                    <div class="tag-emoji">💸</div>
+                    <span class="tag-name">Pobre</span>
+                    <span class="tag-price">R$ 0,99</span>
+                </a>
+
+                <!-- Tags Intermediárias -->
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in intermediate">
+                    <div class="tag-emoji">🎵</div>
+                    <span class="tag-name">Músico</span>
+                    <span class="tag-price">R$ 3,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in intermediate">
+                    <div class="tag-emoji">⚽</div>
+                    <span class="tag-name">Vascaíno</span>
+                    <span class="tag-price">R$ 2,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in intermediate">
+                    <div class="tag-emoji">🎭</div>
+                    <span class="tag-name">Ego</span>
+                    <span class="tag-price">R$ 4,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in intermediate">
+                    <div class="tag-emoji">✨</div>
+                    <span class="tag-name">Aura</span>
+                    <span class="tag-price">R$ 4,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in intermediate">
+                    <div class="tag-emoji">🔮</div>
+                     <span class="tag-name">Ego + Aura</span>
+                    <span class="tag-price">R$ 7,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in intermediate">
+                    <div class="tag-emoji">❄️</div>
+                    <span class="tag-name">Frostbane</span>
+                    <span class="tag-price">R$ 5,99</span>
+                </a>
+
+                <!-- Tags Avançadas -->
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in advanced">
+                    <div class="tag-emoji">🐲</div>
+                    <span class="tag-name">Dragon</span>
+                    <span class="tag-price">R$ 6,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in advanced">
+                    <div class="tag-emoji">⚡</div>
+                    <span class="tag-name">Legendary</span>
+                    <span class="tag-price">R$ 8,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in advanced">
+                    <div class="tag-emoji">🗡️</div>
+                    <span class="tag-name">Slayer</span>
+                    <span class="tag-price">R$ 7,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in advanced">
+                    <div class="tag-emoji">🥷</div>
+                    <span class="tag-name">Ninja</span>
+                    <span class="tag-price">R$ 9,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in advanced">
+                    <div class="tag-emoji">🌑</div>
+                    <span class="tag-name">Shadow</span>
+                    <span class="tag-price">R$ 8,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in advanced">
+                    <div class="tag-emoji">🤫</div>
+                    <span class="tag-name">Silent</span>
+                    <span class="tag-price">R$ 6,99</span>
+                </a>
+
+                <!-- Tags Épicas -->
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in epic">
+                    <div class="tag-emoji">🏔️</div>
+                    <span class="tag-name">Titan</span>
+                    <span class="tag-price">R$ 11,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in epic">
+                    <div class="tag-emoji">❤️‍🔥</div>
+                    <span class="tag-name">Dragonheart</span>
+                    <span class="tag-price">R$ 12,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in epic">
+                    <div class="tag-emoji">⚜️</div>
+                    <span class="tag-name">Lorde</span>
+                    <span class="tag-price">R$ 13,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in epic">
+                    <div class="tag-emoji">🦁</div>
+                    <span class="tag-name">Monarch</span>
+                    <span class="tag-price">R$ 14,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in epic">
+                    <div class="tag-emoji">🦾</div>
+                    <span class="tag-name">IronMan</span>
+                    <span class="tag-price">R$ 12,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in epic">
+                    <div class="tag-emoji">🌒</div>
+                    <span class="tag-name">Eclipse</span>
+                    <span class="tag-price">R$ 13,99</span>
+                </a>
+
+                <!-- Tags Lendárias -->
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in legendary">
+                    <div class="tag-emoji">👑</div>
+                    <span class="tag-name">Emperor</span>
+                    <span class="tag-price">R$ 16,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in legendary">
+                    <div class="tag-emoji">🌌</div>
+                    <span class="tag-name">Eternal</span>
+                    <span class="tag-price">R$ 17,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in legendary">
+                    <div class="tag-emoji">🌌</div>
+                    <span class="tag-name">Voidwalker</span>
+                    <span class="tag-price">R$ 18,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in legendary">
+                    <div class="tag-emoji">💀</div>
+                    <span class="tag-name">Reaper</span>
+                    <span class="tag-price">R$ 16,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in legendary">
+                    <div class="tag-emoji">🔥</div>
+                    <span class="tag-name">Supreme</span>
+                    <span class="tag-price">R$ 19,99</span>
+                </a>
+
+                <a href="https://discord.com/channels/1341084596581957714/1375785674367696948" target="_blank" class="tag-card fade-in legendary">
+                    <div class="tag-emoji">🌀</div>
+                    <span class="tag-name">Vortex</span>
+                    <span class="tag-price">R$ 18,99</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kits Section NOVA -->
+    <section id="kits" class="kits-section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-tag">Equipamento</span>
+                <h2>Descubra Nossos Kits</h2>
+                <p class="section-subtitle">Equipamentos especiais para cada nível de jogador</p>
+            </div>
+
+            <div class="kits-showcase fade-in">
+                <div class="kits-image">
+                    <img src="https://i.postimg.cc/3RvCRYsp/6-Sem-Titulo-20260216125450.png" alt="AfelisMC Kits" class="kits-logo">
+                    <div class="kits-glow"></div>
+                </div>
+                
+                <div class="kits-content">
+                    <h3>De Iniciante a Lendário</h3>
+                    <p>Cada plano possui seus kits exclusivos semanais ou diários, cheios de itens especiais, encantamentos únicos e recursos para dominar o servidor.</p>
+                    
+                    <div class="kits-features">
+                        <div class="kit-feature">
+                            <span class="kit-icon">📦</span>
+                            <div>
+                                <strong>Kit Iniciante</strong>
+                                <span>Itens básicos para sobrevivência</span>
+                            </div>
+                        </div>
+                        <div class="kit-feature">
+                            <span class="kit-icon">⚔️</span>
+                            <div>
+                                <strong>Kit Guerreiro</strong>
+                                <span>Armadura e armas de ferro</span>
+                            </div>
+                        </div>
+                        <div class="kit-feature">
+                            <span class="kit-icon">💎</span>
+                            <div>
+                                <strong>Kit VIP</strong>
+                                <span>Equipamento de diamante encantado</span>
+                            </div>
+                        </div>
+                        <div class="kit-feature">
+                            <span class="kit-icon">👑</span>
+                            <div>
+                                <strong>Kit Elite</strong>
+                                <span>Itens lendários e exclusivos</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="https://discord.com/channels/1341084596581957714/1375785700779102332" target="_blank" class="btn btn-primary" style="margin-top: 2rem;">
+                        Ver Todos os Kits
+                        <span>→</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        /* Tags Styles */
+        .tags-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tag-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .tag-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tag-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .tag-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Rarity Colors */
+        .tag-card.basic {
+            border-color: rgba(128, 128, 128, 0.3);
+        }
+        .tag-card.basic:hover {
+            border-color: rgba(128, 128, 128, 0.6);
+            box-shadow: 0 10px 30px rgba(128, 128, 128, 0.2);
+        }
+
+        .tag-card.intermediate {
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+        .tag-card.intermediate:hover {
+            border-color: rgba(0, 212, 255, 0.6);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .tag-card.advanced {
+            border-color: rgba(255, 140, 66, 0.3);
+        }
+        .tag-card.advanced:hover {
+            border-color: rgba(255, 140, 66, 0.6);
+            box-shadow: 0 10px 30px rgba(255, 140, 66, 0.2);
+        }
+
+        .tag-card.epic {
+            border-color: rgba(148, 0, 211, 0.3);
+        }
+        .tag-card.epic:hover {
+            border-color: rgba(148, 0, 211, 0.6);
+            box-shadow: 0 10px 30px rgba(148, 0, 211, 0.2);
+        }
+
+        .tag-card.legendary {
+            border-color: rgba(255, 215, 0, 0.3);
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), transparent);
+        }
+        .tag-card.legendary:hover {
+            border-color: rgba(255, 215, 0, 0.8);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .tag-emoji {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 0 10px currentColor);
+            transition: transform 0.3s ease;
+        }
+
+        .tag-card:hover .tag-emoji {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .tag-name {
+            font-weight: 600;
+            font-size: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tag-price {
+            color: var(--cyan);
+            font-weight: 700;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+            background: rgba(0, 212, 255, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+        }
+
+        /* Kits Section */
+        .kits-section {
+            background: linear-gradient(180deg, transparent, rgba(0, 212, 255, 0.03), transparent);
+        }
+
+        .kits-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .kits-image {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .kits-logo {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 20px;
+            position: relative;
+            z-index: 2;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .kits-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.3) 0%, transparent 70%);
+            filter: blur(40px);
+            animation: pulse 4s infinite;
+        }
+
+        .kits-content h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--cyan), var(--orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .kits-content > p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .kits-features {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .kit-feature {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .kit-feature:hover {
+            transform: translateX(10px);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .kit-icon {
+            font-size: 1.5rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 12px;
+        }
+
+        .kit-feature div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .kit-feature strong {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .kit-feature span {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 968px) {
+            .tags-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+
+            .kits-showcase {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .kits-features {
+              text-align: left; 
+            }
+        }
+        
+        @media (max-width: 480px) {
+          .tags-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+        </style>
+            <!-- Partners Section -->
+    <section id="parceiros" class="partners">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-tag">Parcerias</span>
+                <h2>Parceiros Oficiais</h2>
+                <p class="section-subtitle">Trabalhamos com os melhores para entregar a melhor experiência</p>
+            </div>
+
+            <div class="partners-grid">
+                <div class="partner-card fade-in">
+                    <div class="partner-logo">VoidCode Studio</div>
+                    <p class="partner-desc">Desenvolvimento & Design</p>
+                    <span class="partner-badge">Tech Partner</span>
+                </div>
+                <div class="partner-card fade-in">
+                    <div class="partner-logo">Skye Brasil</div>
+                    <p class="partner-desc">Bot Oficial Parceiro</p>
+                    <span class="partner-badge">Official Partner</span>
+                </div>
+            </div>
+
+            <div class="skye-cta fade-in">
+                <p style="color: rgba(255,255,255,0.6); margin-bottom: 1rem;">Quer adicionar o Skye Bot ao seu servidor?</p>
+                <a href="#" class="btn btn-secondary">Adicionar a Skye Bot</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-tag">Comunidade</span>
+                <h2>Junte-se a Nós</h2>
+                <p class="section-subtitle">Servidor reabrindo - Seja um dos primeiros a dominar!</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card fade-in">
+                    <div class="stat-number" data-target="50">0</div>
+                    <div class="stat-label">Vagas Iniciais</div>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="stat-number" data-target="5">0</div>
+                    <div class="stat-label">Clans Fundadores</div>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="stat-number" data-target="99">0</div>
+                    <div class="stat-label">% Uptime</div>
+                </div>
+                <div class="stat-card fade-in">
+                    <div class="stat-number" data-target="24">0</div>
+                    <div class="stat-label">/7 Suporte</div>
+                </div>
+            </div>
+
+            <div class="reopening-banner fade-in">
+                <div class="reopening-content">
+                    <h3>🎉 Reabertura Especial!</h3>
+                    <p>Preços promocionais por tempo limitado. Garanta sua tag ou VIP agora!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div>
+                <span class="footer-brand">AfelisMC</span>
+                <p class="footer-desc">Servidor semi-anarquia de Minecraft Bedrock de volta! Rivalize, conquiste e domine com preços acessíveis para todos.</p>
+                <div class="footer-social">
+                    <a href="#" class="social-link" title="Discord">D</a>
+                    <a href="#" class="social-link" title="Twitter">T</a>
+                    <a href="#" class="social-link" title="YouTube">Y</a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Servidor</h4>
+                <ul>
+                    <li><a href="#comandos">Comandos</a></li>
+                    <li><a href="#planos">Planos</a></li>
+                    <li><a href="#tags">Tags</a></li>
+                    <li><a href="#kits">Kits</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Suporte</h4>
+                <ul>
+                    <li><a href="#">Discord</a></li>
+                    <li><a href="#">Regras</a></li>
+                    <li><a href="#">Status</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Termos</a></li>
+                    <li><a href="#">Privacidade</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 AfelisMC - Todos os direitos reservados</p>
+            <p>Parceiro Oficial Skye Brasil</p>
+        </div>
+    </footer>
+
+    <style>
+        /* Partners Styles */
+        .partners {
+            background: linear-gradient(180deg, transparent, rgba(255, 140, 66, 0.02), transparent);
+        }
+
+        .partners-grid {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .partner-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.5rem 3rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            min-width: 250px;
+            backdrop-filter: blur(10px);
+        }
+
+        .partner-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 212, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .partner-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fff, rgba(255, 255, 255, 0.7));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .partner-desc {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .partner-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            color: var(--cyan);
+            font-weight: 600;
+        }
+
+        .skye-cta {
+            text-align: center;
+            padding: 2rem;
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Stats Styles */
+        .stats {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.03), rgba(255, 140, 66, 0.03));
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .stat-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--cyan), var(--orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .reopening-banner {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 140, 66, 0.1));
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .reopening-content h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--cyan);
+        }
+
+        .reopening-content p {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Footer Styles */
+        footer {
+            background: var(--dark);
+            border-top: 1px solid var(--border);
+            padding: 4rem 5% 2rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--cyan), var(--orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .footer-desc {
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            max-width: 300px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .social-link:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--cyan);
+            transform: translateY(-3px);
+        }
+
+        .footer-links h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: #fff;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--cyan);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 968px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .partners-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Animate numbers
+                    if (entry.target.querySelector('.stat-number')) {
+                        animateNumber(entry.target.querySelector('.stat-number'));
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Number animation
+        function animateNumber(element) {
+            const target = parseInt(element.getAttribute('data-target'));
+            const duration = 2000;
+            const step = target / (duration / 16);
+            let current = 0;
+
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    element.textContent = target + (target === 99 ? '%' : target === 24 ? '/7' : '+');
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current) + (target === 99 ? '%' : target === 24 ? '/7' : '+');
+                }
+            }, 16);
+        }
+
+        // Mobile menu
+        function toggleMenu() {
+            alert('Menu mobile em desenvolvimento - Use os links diretos');
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
